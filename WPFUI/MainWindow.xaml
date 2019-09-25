@@ -1,0 +1,305 @@
+﻿<Window x:Class="WPFUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFUI"
+        mc:Ignorable="d"
+        FontSize="11pt"
+        Title="RPG" 
+        KeyDown="MainWindow_OnKeyDown"
+        Height="768" Width="1024">
+     <Window.Resources>
+          <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+     </Window.Resources>
+     <Grid>
+          <Grid.RowDefinitions>
+               <RowDefinition Height="Auto" />
+               <RowDefinition Height="*" />
+               <RowDefinition Height="225"/>
+          </Grid.RowDefinitions>
+
+          <Grid.ColumnDefinitions>
+               <ColumnDefinition Width="250" />
+               <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <!--Menu-->
+          <Label Grid.Row="0"
+                 Grid.ColumnSpan="2"
+                 Content="Menu"
+                 Background="AliceBlue"/>
+          <!--Player Stats-->
+          <Grid Grid.Row="1"
+                Grid.Column="0"
+                Background="Aquamarine">
+               <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+               </Grid.RowDefinitions>
+
+               <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+               </Grid.ColumnDefinitions>
+
+               <Label Grid.Row="0" Grid.Column="0" Content="Name: "/>
+               <Label Grid.Row="0" Grid.Column="1" Content="{Binding CurrentPlayer.Name, Mode=OneWay}"/>
+               <Label Grid.Row="1" Grid.Column="0" Content="Class: "/>
+               <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentPlayer.CharacterClass,Mode=OneWay}"/>
+               <Label Grid.Row="2" Grid.Column="0" Content="Hit Points:"/>
+               <Label Grid.Row="2" Grid.Column="1" Content="{Binding CurrentPlayer.CurrentHP,Mode=OneWay}"/>
+               <Label Grid.Row="3" Grid.Column="0" Content="Gold:"/>
+               <Label Grid.Row="3" Grid.Column="1" Content="{Binding CurrentPlayer.Gold,Mode=OneWay}"/>
+               <Label Grid.Row="4" Grid.Column="0" Content="XP:"/>
+               <Label Grid.Row="4" Grid.Column="1" Content="{Binding CurrentPlayer.XP,Mode=OneWay}"/>
+               <Label Grid.Row="5" Grid.Column="0" Content="Level:"/>
+               <Label Grid.Row="5" Grid.Column="1" Content="{Binding CurrentPlayer.Level,Mode=OneWay}"/>
+          </Grid>
+          <!--Game Play-->
+          <Grid Grid.Row="1" 
+                 Grid.Column="1" 
+                Background="Beige">
+               <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+               </Grid.RowDefinitions>
+               <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+               </Grid.ColumnDefinitions>
+               
+               <!--Game Messages-->
+               <Border Grid.Row="0" Grid.Column="0"
+                       Grid.RowSpan="2"
+                       BorderBrush="Gainsboro"
+                       BorderThickness="1">
+                    <RichTextBox x:Name="GameMessages"
+                                 Background="Beige"
+                                 VerticalScrollBarVisibility="Auto">
+                         <RichTextBox.Resources>
+                              <Style TargetType="{x:Type Paragraph}">
+                                   <Setter Property="Margin" Value="0" />
+                              </Style>
+                         </RichTextBox.Resources>
+                    </RichTextBox>
+               </Border>
+               
+               <!--Location Information-->
+               <Border Grid.Row="0" Grid.Column="1"
+                       BorderBrush="Gainsboro"
+                       BorderThickness="1">
+                    <Grid Margin="3">
+                         <Grid.RowDefinitions>
+                              <RowDefinition Height="auto" />
+                              <RowDefinition Height="*" />
+                              <RowDefinition Height="auto" />
+                         </Grid.RowDefinitions>
+
+                         <TextBlock Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding CurrentLocation.Name, Mode=OneWay}"/>
+
+                         <Image Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Height="125"
+                                Width="125"
+                                Source="{Binding CurrentLocation.ImageName, 
+                                            Converter={StaticResource FileToBitmapConverter}}"/>
+
+                         <TextBlock Grid.Row="2"
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding CurrentLocation.Description, Mode=OneWay}"
+                                    TextWrapping="Wrap"/>
+
+                    </Grid>
+               </Border>
+               <!-- Monster Information-->
+               <Border Grid.Row="1" Grid.Column="1"
+                       BorderBrush="Gainsboro"
+                       BorderThickness="1">
+                    <Grid>
+                         <Grid.RowDefinitions>
+                              <RowDefinition Height="auto" />
+                              <RowDefinition Height="*" />
+                              <RowDefinition Height="auto" />
+                         </Grid.RowDefinitions>
+
+                         <TextBlock Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    Height="auto"
+                                    Text="{Binding CurrentMonster.Name, Mode=OneWay}"/>
+                         <Image Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Height="125"
+                                Width="125"
+                                Source="{Binding CurrentMonster.ImageName, Mode=OneWay}"/>
+                         <StackPanel Grid.Row="2"
+                                     Visibility="{Binding HasMonster,Converter={StaticResource BooleanToVisibility}}"
+                                     HorizontalAlignment="Center"
+                                     Orientation="Horizontal">
+                              <TextBlock>Current Hit Points:</TextBlock>
+                              <TextBlock Text="{Binding CurrentMonster.CurrentHP, Mode=OneWay}"/>
+                         </StackPanel>
+                    </Grid>
+               </Border>
+          </Grid>
+
+          <!--Inventory and Quests-->
+          <Grid Grid.Row="2" Grid.Column="0" 
+                Background="BurlyWood">
+               <TabControl x:Name="PlayerDataTabControl">
+                    <TabItem Header="Inventory"
+                             x:Name="InventoryTabItem">
+                         <DataGrid ItemsSource="{Binding CurrentPlayer.GroupedInventory}"
+                                   AutoGenerateColumns="False"
+                                   HeadersVisibility="Column">
+                              <DataGrid.Columns>
+                                   <DataGridTextColumn Header="Description"
+                                                       Binding="{Binding Item.Name, Mode=OneWay}"
+                                                       Width="*"/>
+                                   <DataGridTextColumn Header="Qty"
+                                                IsReadOnly="True"
+                                                Width="Auto"
+                                                Binding="{Binding Quantity, Mode=OneWay}"/>
+                                   <DataGridTextColumn Header="Price"
+                                                       Binding="{Binding Item.Price, Mode=OneWay}"
+                                                       Width="auto"/>
+                              </DataGrid.Columns>
+                         </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Quests"
+                             x:Name="QuestTabItem">
+                         <DataGrid ItemsSource="{Binding CurrentPlayer.Quests, Mode=OneWay}"
+                                   AutoGenerateColumns="False"
+                                   HeadersVisibility="Column">
+                              <DataGrid.Columns>
+                                   <DataGridTextColumn Header="Name"
+                                                       Binding="{Binding PlayerQuest.Name, Mode=OneWay}"
+                                                       Width="*"/>
+                                   <DataGridTextColumn Header="Done?"
+                                                       Binding="{Binding PlayerQuest.IsCompleted, Mode=OneWay}"
+                                                       Width="Auto"/>
+                              </DataGrid.Columns>
+                         </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Recipes"
+                             x:Name="RecipeTabItem">
+                         <DataGrid ItemsSource="{Binding CurrentPlayer.Recipes}"
+                              AutoGenerateColumns="False"
+                              HeadersVisibility="Column">
+                              <DataGrid.Columns>
+                                   <DataGridTextColumn Header="Name"
+                                                Binding="{Binding Name, Mode=OneWay}"
+                                                Width="*"/>
+                                   <DataGridTemplateColumn MinWidth="75">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                             <DataTemplate>
+                                                  <Button Click="OnClick_Craft"
+                                                Width="55"
+                                                Content="Craft"/>
+                                             </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                   </DataGridTemplateColumn>
+                              </DataGrid.Columns>
+                         </DataGrid>
+                    </TabItem>
+               </TabControl>
+          </Grid>
+
+          <!--Action Controls-->
+          <Grid Grid.Row="2" Grid.Column="1"
+                Background="Lavender">
+
+               <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+               </Grid.RowDefinitions>
+
+               <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="255" />
+               </Grid.ColumnDefinitions>
+
+               <!-- Combat Controls -->
+               <Grid Grid.Row="0" Grid.Column="0"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                         <RowDefinition Height="Auto"/>
+                         <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                         <ColumnDefinition Width="150"/>
+                         <ColumnDefinition Width="10"/>
+                         <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Row="0" Grid.Column="0"
+                          Visibility="{Binding HasMonster, Converter={StaticResource BooleanToVisibility}}"
+                          ItemsSource="{Binding CurrentPlayer.Weapons}"
+                          SelectedItem="{Binding CurrentPlayer.CurrentWeapon}"
+                          DisplayMemberPath="Name"/>
+
+                    <Button Grid.Row="0" Grid.Column="2"
+                        Visibility="{Binding HasMonster, Converter={StaticResource BooleanToVisibility}}"
+                        Content="Use"
+                        Click="OnClick_AttackMonster"/>
+
+                    <ComboBox Grid.Row="1" Grid.Column="0" Margin="0,5,0,0"
+                          Visibility="{Binding CurrentPlayer.HasConsumable, Converter={StaticResource BooleanToVisibility}}"
+                          ItemsSource="{Binding CurrentPlayer.Consumables}"
+                          SelectedItem="{Binding CurrentPlayer.CurrentConsumable}"
+                          DisplayMemberPath="Name"/>
+
+                    <Button Grid.Row="1" Grid.Column="2" Margin="0,5,0,0"
+                        Visibility="{Binding CurrentPlayer.HasConsumable, Converter={StaticResource BooleanToVisibility}}"
+                        Content="Use"
+                        Click="OnClick_UseCurrentConsumable"/>
+               </Grid>
+
+               <!--Movement Controls-->
+               <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                         <RowDefinition Height="*" />
+                         <RowDefinition Height="*" />
+                         <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                         <ColumnDefinition Width="*" />
+                         <ColumnDefinition Width="*" />
+                         <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Row="0" Grid.Column="1" Content="North"
+                            Height="25" Width="65" Margin="10"
+                            Click="OnClick_MoveNorth"
+                            Visibility="{Binding HasLocationToNorth, Converter={StaticResource BooleanToVisibility}}"/>
+                    <Button Grid.Row="1" Grid.Column="0" Content="West"
+                            Height="25" Width="65" Margin="10"
+                            Click="OnClick_MoveWest"
+                            Visibility="{Binding HasLocationToWest, Converter={StaticResource BooleanToVisibility}}"/>
+                    <Button Grid.Row="1" Grid.Column="1" 
+                        Height="25" Width="65" Margin="10" 
+                        Click="OnClick_DisplayTradeScreen"
+                        Visibility="{Binding HasTrader, Converter={StaticResource BooleanToVisibility}}"
+                        Content="Trade"/>
+                    <Button Grid.Row="1" Grid.Column="2" Content="East"
+                            Height="25" Width="65" Margin="10"
+                            Click="OnClick_MoveEast"
+                            Visibility="{Binding HasLocationToEast, Converter={StaticResource BooleanToVisibility}}"/>
+                    <Button Grid.Row="2" Grid.Column="1" Content="South"
+                            Height="25" Width="65" Margin="10"
+                            Click="OnClick_MoveSouth"
+                            Visibility="{Binding HasLocationToSouth, Converter={StaticResource BooleanToVisibility}}"/>
+               </Grid>
+
+          </Grid>
+     </Grid>
+</Window>

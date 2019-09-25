@@ -1,0 +1,9 @@
+D:\Development\MyProjects\SOSCSRPG\Engine\bin\Debug\GameData\GameItems.xml
+D:\Development\MyProjects\SOSCSRPG\Engine\bin\Debug\GameData\Locations.xml
+D:\Development\MyProjects\SOSCSRPG\Engine\bin\Debug\Engine.dll
+D:\Development\MyProjects\SOSCSRPG\Engine\bin\Debug\Engine.pdb
+D:\Development\MyProjects\SOSCSRPG\Engine\obj\Debug\Engine.g.resources
+D:\Development\MyProjects\SOSCSRPG\Engine\obj\Debug\Engine.csproj.CoreCompileInputs.cache
+D:\Development\MyProjects\SOSCSRPG\Engine\obj\Debug\Engine.dll
+D:\Development\MyProjects\SOSCSRPG\Engine\obj\Debug\Engine.pdb
+D:\Development\MyProjects\SOSCSRPG\Engine\obj\Debug\Engine.csprojAssemblyReference.cache
